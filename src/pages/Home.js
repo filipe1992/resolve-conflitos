@@ -7,6 +7,7 @@ import {
   Box,
   Paper,
 } from '@mui/material';
+import Footer from '../components/Footer';
 
 function Home() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function Home() {
           </Button>
         </Paper>
       </Box>
+      <Footer />
     </Container>
   );
 }
