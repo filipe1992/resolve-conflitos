@@ -327,6 +327,7 @@ function DetalhesDemanda() {
 const selectedLocal = locais.find(loc => loc.id === selectedLocation);
 const email = selectedLocal?.email;
   const hasWhatsapp = selectedLocal?.telefone;
+const hasEndereco = selectedLocal?.endereco;
 
   return (
     <Container maxWidth="sm">
@@ -354,12 +355,28 @@ const email = selectedLocal?.email;
           {selectedLocation && (
             <Box>
               <List>
-                <ListItem>
-                  <ListItemText
-                    primary="Endereço"
-                    secondary={locais.find(loc => loc.id === selectedLocation)?.endereco}
-                  />
-                </ListItem>
+                <ListItem
+  button // Transforma em botão clicável
+  component="a" // Usa elemento de âncora (<a>)
+  href={selectedLocation 
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hasEndereco || '')}` 
+    : '#'
+  }
+  target="_blank" // Abre em nova aba
+  rel="noopener noreferrer" // Segurança para nova aba
+  disabled={!hasEndereco} // Desativa se não houver local
+>
+  <ListItemText
+    primary="Endereço"
+    secondary={hasEndereco || "Nenhum local selecionado"}
+    secondaryTypographyProps={{ 
+      component: "span", // Mantém estilo consistente
+      style: { 
+        color: !hasEndereco ? "rgba(0, 0, 0, 0.38)" : "inherit" // Cor de desabilitado
+      } 
+    }}
+  />
+</ListItem>
                 <Divider />
                 <ListItem>
                   <ListItemText
