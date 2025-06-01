@@ -323,6 +323,7 @@ function DetalhesDemanda() {
 
   // Filtrar locais por competência
   const locaisFiltrados = locais.filter(local => local.competencia === tipo);
+  const hasWhatsapp = locais.find(loc => loc.id === selectedLocation)?.telefone
 
   return (
     <Container maxWidth="sm">
@@ -391,9 +392,11 @@ function DetalhesDemanda() {
                 fullWidth
                 onClick={handleWhatsApp}
                 sx={{ mt: 2 }}
-                disabled={!locais.find(loc => loc.id === selectedLocation)?.telefone}
+                disabled={!hasWhatsapp}
               >
-                Entrar em contato via WhatsApp
+                {hasWhatsapp
+? "Entrar em contato via WhatsApp"
+: "Não possui whatsapp disponível para contato."}
               </Button>
             </Box>
           )}
