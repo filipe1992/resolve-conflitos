@@ -10,17 +10,17 @@ import {
   ListItemText,
   ListItemButton,
   Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Divider,
+  Collapse,
+  IconButton,
 } from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Footer from '../components/Footer';
 
 function DetalhesDemanda() {
   const { tipo } = useParams();
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [expandedItems, setExpandedItems] = useState({});
 
   // Dados de exemplo - você deve substituir com dados reais
   const locais = [
@@ -314,21 +314,21 @@ function DetalhesDemanda() {
     }
   };
 
-  const handleWhatsApp = () => {
-    const location = locais.find(loc => loc.id === selectedLocation);
-    if (location) {
-      const message = `Olá, eu estou em um conflito na ${getTipoDemanda()} e gostaria de auxílio.`;
-      const whatsappUrl = `https://wa.me/${location.telefone}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
+  const handleToggleExpand = (id) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const handleWhatsApp = (telefone) => {
+    const message = `Olá, eu estou em um conflito na ${getTipoDemanda()} e gostaria de auxílio.`;
+    const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   // Filtrar locais por competência
   const locaisFiltrados = locais.filter(local => local.competencia === tipo);
-const selectedLocal = locais.find(loc => loc.id === selectedLocation);
-const email = selectedLocal?.email;
-  const hasWhatsapp = selectedLocal?.telefone;
-const hasEndereco = selectedLocal?.endereco;
 
   return (
     <Container maxWidth="sm">
@@ -338,92 +338,99 @@ const hasEndereco = selectedLocal?.endereco;
         </Typography>
 
         <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Selecione um local</InputLabel>
-            <Select
-              value={selectedLocation}
-              label="Selecione um local"
-              onChange={(e) => setSelectedLocation(e.target.value)}
-            >
-              {locaisFiltrados.map((local) => (
-                <MenuItem key={local.id} value={local.id}>
-                  {local.nome}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {selectedLocation && (
-            <Box>
-              <List>
-                <ListItem
-  button // Transforma em botão clicável
-  component="a" // Usa elemento de âncora (<a>)
-  href={selectedLocation 
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hasEndereco || '')}` 
-    : '#'
-  }
-  target="_blank" // Abre em nova aba
-  rel="noopener noreferrer" // Segurança para nova aba
-  disabled={!hasEndereco} // Desativa se não houver local
->
-  <ListItemText
-    primary="Endereço"
-    secondary={hasEndereco || "Nenhum local selecionado"}
-    secondaryTypographyProps={{ 
-      component: "span", // Mantém estilo consistente
-      style: { 
-        color: !hasEndereco ? "rgba(0, 0, 0, 0.38)" : "inherit" // Cor de desabilitado
-      } 
-    }}
-  />
-</ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText
-                    primary="Telefone"
-                    secondary={locais.find(loc => loc.id === selectedLocation)?.telefone_str}
-                  />
-                </ListItem>
-                <Divider />
-<ListItemButton 
-  disabled={!email}
-  onClick={() => email && (window.location.href = `mailto:${email}`)}
->
-  <ListItemText
-    primary="Email"
-    secondary={email || "Não disponível"}
-  />
-</ListItemButton>
-                <Divider />
-                <ListItem>
-                  <ListItemText
-                    primary="Horário de Funcionamento"
-                    secondary={locais.find(loc => loc.id === selectedLocation)?.funcionamento}
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText
-                    primary="Coordenador"
-                    secondary={locais.find(loc => loc.id === selectedLocation)?.coordenador}
-                  />
-                </ListItem>
-              </List>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleWhatsApp}
-                sx={{ mt: 2 }}
-                disabled={!hasWhatsapp}
-              >
-                {hasWhatsapp
-? "Entrar em contato via WhatsApp"
-: "Não possui whatsapp disponível para contato."}
-              </Button>
-            </Box>
-          )}
+          <Typography variant="h6" gutterBottom>
+            Locais disponíveis:
+          </Typography>
+          
+          <List>
+            {locaisFiltrados.map((local) => (
+              <React.Fragment key={local.id}>
+                <ListItemButton onClick={() => handleToggleExpand(local.id)}>
+                  <ListItemText primary={local.nome} />
+                  {expandedItems[local.id] ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                
+                <Collapse in={expandedItems[local.id]} timeout="auto" unmountOnExit>
+                  <Box sx={{ pl: 4, pr: 2, pt: 1, pb: 2 }}>
+                    <List disablePadding>
+                      <ListItem
+                        button
+                        component="a"
+                        href={local.endereco 
+                          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(local.endereco)}` 
+                          : '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        disabled={!local.endereco}
+                      >
+                        <ListItemText
+                          primary="Endereço"
+                          secondary={local.endereco || "Não disponível"}
+                          secondaryTypographyProps={{ 
+                            style: { 
+                              color: !local.endereco ? "rgba(0, 0, 0, 0.38)" : "inherit" 
+                            } 
+                          }}
+                        />
+                      </ListItem>
+                      <Divider />
+                      
+                      <ListItem>
+                        <ListItemText
+                          primary="Telefone"
+                          secondary={local.telefone_str || "Não disponível"}
+                        />
+                      </ListItem>
+                      <Divider />
+                      
+                      <ListItemButton 
+                        disabled={!local.email}
+                        onClick={() => local.email && (window.location.href = `mailto:${local.email}`)}
+                      >
+                        <ListItemText
+                          primary="Email"
+                          secondary={local.email || "Não disponível"}
+                        />
+                      </ListItemButton>
+                      <Divider />
+                      
+                      <ListItem>
+                        <ListItemText
+                          primary="Horário de Funcionamento"
+                          secondary={local.funcionamento || "Não disponível"}
+                        />
+                      </ListItem>
+                      <Divider />
+                      
+                      <ListItem>
+                        <ListItemText
+                          primary="Coordenador"
+                          secondary={local.coordenador || "Não disponível"}
+                        />
+                      </ListItem>
+                      <Divider />
+                      
+                      <ListItem>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          onClick={() => handleWhatsApp(local.telefone)}
+                          sx={{ mt: 2 }}
+                          disabled={!local.telefone}
+                        >
+                          {local.telefone
+                            ? "Entrar em contato via WhatsApp"
+                            : "WhatsApp não disponível"}
+                        </Button>
+                      </ListItem>
+                    </List>
+                  </Box>
+                </Collapse>
+                <Divider sx={{ my: 1 }} />
+              </React.Fragment>
+            ))}
+          </List>
         </Paper>
       </Box>
       <Footer/>
