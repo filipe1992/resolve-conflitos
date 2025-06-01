@@ -323,7 +323,9 @@ function DetalhesDemanda() {
 
   // Filtrar locais por competência
   const locaisFiltrados = locais.filter(local => local.competencia === tipo);
-  const hasWhatsapp = locais.find(loc => loc.id === selectedLocation)?.telefone
+const selectedLocal = locais.find(loc => loc.id === selectedLocation);
+const email = selectedLocal?.email;
+  const hasWhatsapp = selectedLocal?.telefone
 
   return (
     <Container maxWidth="sm">
@@ -365,12 +367,15 @@ function DetalhesDemanda() {
                   />
                 </ListItem>
                 <Divider />
-                <ListItem>
-                  <ListItemText
-                    primary="Email"
-                    secondary={locais.find(loc => loc.id === selectedLocation)?.email || "Não disponível"}
-                  />
-                </ListItem>
+<ListItemButton 
+  disabled={!email}
+  onClick={() => email && (window.location.href = `mailto:${email}`)}
+>
+  <ListItemText
+    primary="Email"
+    secondary={email || "Não disponível"}
+  />
+</ListItemButton>
                 <Divider />
                 <ListItem>
                   <ListItemText
