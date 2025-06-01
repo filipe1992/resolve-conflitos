@@ -325,7 +325,7 @@ function DetalhesDemanda() {
   const locaisFiltrados = locais.filter(local => local.competencia === tipo);
 const selectedLocal = locais.find(loc => loc.id === selectedLocation);
 const email = selectedLocal?.email;
-  const hasWhatsapp = selectedLocal?.telefone
+  const hasWhatsapp = selectedLocal?.telefone;
 
   return (
     <Container maxWidth="sm">
