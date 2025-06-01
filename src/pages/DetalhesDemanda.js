@@ -16,6 +16,7 @@ import {
   InputLabel,
   Divider,
 } from '@mui/material';
+import Footer from '../components/Footer';
 
 function DetalhesDemanda() {
   const { tipo } = useParams();
@@ -425,6 +426,7 @@ const hasEndereco = selectedLocal?.endereco;
           )}
         </Paper>
       </Box>
+      <Footer/>
     </Container>
   );
 }
