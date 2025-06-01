@@ -8,6 +8,7 @@ import {
   Paper,
   Grid,
 } from '@mui/material';
+import Footer from '../components/Footer';
 
 function Demandas() {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ function Demandas() {
           ))}
         </Grid>
       </Box>
+      <Footer />
     </Container>
   );
 }
