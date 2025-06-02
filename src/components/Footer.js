@@ -27,7 +27,7 @@ function Footer() {
             Desenvolvido pela Equipe de Extensão da Faculdade Estácio
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-            Thaylane Ravena Deoliveira Gomes
+            Thaylane Ravena Gomes De Oliveira
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem', mt: 1 }}>
             Desenvolvimento: Fire Bunny
