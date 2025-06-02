@@ -31,7 +31,7 @@ function Demandas() {
     {
       tipo: 'saude',
       titulo: 'Demandas de Saúde Pública',
-      descricao: 'Conflitos relacionados à área da saúde e serviços públicos.',
+      descricao: 'Conflitos envolvendo pessoas ou empresas relacionados à área da saúde e serviços públicos.',
     },
   ];
 
