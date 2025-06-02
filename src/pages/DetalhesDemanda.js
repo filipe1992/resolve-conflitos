@@ -13,6 +13,8 @@ import {
   Divider,
   Collapse,
   IconButton,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -21,6 +23,8 @@ import Footer from '../components/Footer';
 function DetalhesDemanda() {
   const { tipo } = useParams();
   const [expandedItems, setExpandedItems] = useState({});
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Dados de exemplo - você deve substituir com dados reais
   const locais = [
@@ -254,27 +258,25 @@ function DetalhesDemanda() {
   const locaisFiltrados = locais.filter(local => local.competencia === tipo);
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth="sm" sx={{ px: isMobile ? 1 : 2 }}>
+      <Box sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}>
+        <Typography variant={isMobile ? 'h5' : 'h4'} component="h1" gutterBottom align="center">
           {getTipoDemanda()}
         </Typography>
 
-        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
+        <Paper elevation={3} sx={{ p: isMobile ? 2 : 3, mb: 3 }}>
+          <Typography variant={isMobile ? 'subtitle1' : 'h6'} gutterBottom>
             Locais disponíveis:
           </Typography>
-          
           <List>
             {locaisFiltrados.map((local) => (
               <React.Fragment key={local.id}>
                 <ListItemButton onClick={() => handleToggleExpand(local.id)}>
-                  <ListItemText primary={local.nome} />
+                  <ListItemText primary={local.nome} sx={{ fontSize: isMobile ? '1rem' : '1.1rem' }} />
                   {expandedItems[local.id] ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
-                
                 <Collapse in={expandedItems[local.id]} timeout="auto" unmountOnExit>
-                  <Box sx={{ pl: 4, pr: 2, pt: 1, pb: 2 }}>
+                  <Box sx={{ pl: 2, pr: 1, pt: 1, pb: 2 }}>
                     <List disablePadding>
                       <ListItem
                         button
@@ -291,21 +293,20 @@ function DetalhesDemanda() {
                           secondary={local.endereco || "Não disponível"}
                           secondaryTypographyProps={{ 
                             style: { 
-                              color: !local.endereco ? "rgba(0, 0, 0, 0.38)" : "inherit" 
+                              color: !local.endereco ? "rgba(0, 0, 0, 0.38)" : "inherit",
+                              fontSize: isMobile ? '0.95rem' : '1rem'
                             } 
                           }}
                         />
                       </ListItem>
-                      <Divider />
-                      
                       <ListItem>
                         <ListItemText
                           primary="Telefone"
                           secondary={local.telefone_str || "Não disponível"}
+                          secondaryTypographyProps={{ fontSize: isMobile ? '0.95rem' : '1rem' }}
                         />
                       </ListItem>
                       <Divider />
-                      
                       <ListItemButton 
                         disabled={!local.email}
                         onClick={() => local.email && (window.location.href = `mailto:${local.email}`)}
@@ -313,33 +314,32 @@ function DetalhesDemanda() {
                         <ListItemText
                           primary="Email"
                           secondary={local.email || "Não disponível"}
+                          secondaryTypographyProps={{ fontSize: isMobile ? '0.95rem' : '1rem' }}
                         />
                       </ListItemButton>
                       <Divider />
-                      
                       <ListItem>
                         <ListItemText
                           primary="Horário de Funcionamento"
                           secondary={local.funcionamento || "Não disponível"}
+                          secondaryTypographyProps={{ fontSize: isMobile ? '0.95rem' : '1rem' }}
                         />
                       </ListItem>
-                      <Divider />
-                      
                       <ListItem>
                         <ListItemText
                           primary="Coordenador"
                           secondary={local.coordenador || "Não disponível"}
+                          secondaryTypographyProps={{ fontSize: isMobile ? '0.95rem' : '1rem' }}
                         />
                       </ListItem>
                       <Divider />
-                      
                       <ListItem>
                         <Button
                           variant="contained"
                           color="primary"
                           fullWidth
                           onClick={() => handleWhatsApp(local.telefone)}
-                          sx={{ mt: 2 }}
+                          sx={{ mt: 2, fontSize: isMobile ? '0.95rem' : '1rem' }}
                           disabled={!local.telefone}
                         >
                           {local.telefone
